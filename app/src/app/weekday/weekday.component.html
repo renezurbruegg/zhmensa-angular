@@ -1,0 +1,8 @@
+<mat-tab-group mat-stretch-tabs color="accent" backgroundColor="primary">
+
+  <mat-tab *ngFor="let mealtype of day.mealTypes" [label]="mealtype.label">
+    <app-meal-type
+    [meal] = "mealtype"></app-meal-type>
+  </mat-tab>
+
+</mat-tab-group>

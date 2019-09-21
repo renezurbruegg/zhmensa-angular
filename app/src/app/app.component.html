@@ -1,0 +1,50 @@
+<mat-sidenav-container>
+
+	<!-- The side nav -->
+	<mat-sidenav style = "min-width: 250px" #drawer class="sidenav" fixedInViewport="true" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!( (isHandset$)  | async)">
+
+			<mat-toolbar color="primary">Mensen</mat-toolbar>
+
+		<mat-nav-list>
+			<app-menu-list-item *ngFor="let item of navItems" [item]="item" [drawer]="drawer" [isToggleEnabled]="isToggleEnabled">
+
+		</app-menu-list-item>
+		<!--	<a routerLink="/menus">menus</a> -->
+		</mat-nav-list>
+	</mat-sidenav>
+	<!-- EO: Side nav-->
+
+	<!-- Side nav content-->
+	<mat-sidenav-content>
+		<mat-toolbar color="primary" class="position-fixed">
+
+    <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
+      <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+    </button>
+      <span class="mat-spacer"></span>
+      <span>{{title}}</span>
+	      <span fxFlex="auto"></span>
+
+				<div class="example-container">
+	  <form class="example-container" [formGroup]="searchForm">
+		<mat-form-field class="search-field">
+    <input matInput type="search" placeholder="search here" class="search-input" formControlName="searchCtrl">
+    <mat-icon matPrefix>search</mat-icon>
+</mat-form-field>
+
+</form>
+</div>
+    </mat-toolbar>
+
+		<div class="content"style="width:100%" >
+
+
+<router-outlet></router-outlet>
+
+
+        </div>
+
+  </mat-sidenav-content>
+  <!-- EO: Side nav content-->
+
+</mat-sidenav-container>
