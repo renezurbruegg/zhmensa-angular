@@ -1,0 +1,35 @@
+
+
+
+<mat-card class="menu-card">
+
+  <mat-card-header style="width:100%">
+
+     <div fxFlex></div> <div class="vegi"><div class="vegi-badge">vegi</div></div>
+    <mat-card-title>{{getMenuName()}}</mat-card-title>
+
+    <mat-card-subtitle>{{menu.prices}}</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <p>
+    {{menu.description}}
+    </p>
+          <p *ngIf = "menu.isExpanded">Allergene:  {{menu.allergene}}</p>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-icon-button>
+     <mat-icon *ngIf = "isFavorite(menu)" (click)="toggleFavorite(menu)">favorite</mat-icon>
+     <mat-icon *ngIf = "!isFavorite(menu)" (click)="toggleFavorite(menu)">favorite_border</mat-icon>
+   </button>
+    <button mat-button>
+
+       <mat-icon (click)="hideMenu(menu)" >visibility_off</mat-icon></button>
+
+
+    <button *ngIf="hasAllergene && !menu.isExpanded" (click)="toggleExpandMenu(menu)" mat-icon-button style="float:right"><mat-icon>expand_more</mat-icon></button>
+    <button *ngIf="hasAllergene && menu.isExpanded" (click)="toggleExpandMenu(menu)" mat-icon-button style="float:right"><mat-icon>expand_less</mat-icon></button>
+
+  </mat-card-actions>
+</mat-card>

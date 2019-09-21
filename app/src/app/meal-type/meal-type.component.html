@@ -1,0 +1,13 @@
+<div fxLayoutAlign="space-evenly" style="width:100%" class="content">
+  <div class="content" fxLayoutAlign="space-evenly" fxFlex.gt-xs="500px" fxFlex.gt-sm="800px" fxFlex.gt-md="1000px" fxFlex.gt-lg="1140px">
+
+    <div fxLayout="row wrap" fxLayoutAlign="space-evenly">
+      <ng-container *ngFor="let menu of meal.menus">
+        <div  *ngIf = "!menu.isHidden" class="menu-card">
+          <app-menu-card-component [menu]="menu">
+          </app-menu-card-component>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
