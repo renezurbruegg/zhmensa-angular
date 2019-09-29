@@ -40,7 +40,7 @@ export class FavoriteMensaComponent implements OnInit {
         this.filterStoredMensa( () => true);
       })
 
-      this.mensaService.onMenuFavChanged$.subscribe( (id) => {    
+      this.mensaService.onMenuFavChanged$.subscribe( (id) => {
             this.filterStoredMensa(() => true);
       })
 
@@ -52,8 +52,8 @@ export class FavoriteMensaComponent implements OnInit {
   breakpoint: number;
 
   filterStoredMensa(filter: (menu: Menu) => boolean): void {
-    this.mensa.weekdays.forEach((day: Weekday) => {
-      day.mealTypes.forEach((type: MealType) => {
+    Object.values(this.mensa.weekdays).forEach((day: Weekday) => {
+      Object.values(day.mealTypes).forEach((type: MealType) => {
         type.menus = this.filterMenus(type._menus, filter);
       })
     })
@@ -79,6 +79,10 @@ export class FavoriteMensaComponent implements OnInit {
   }
 
   constructor(private route: ActivatedRoute, private mensaService: MensaService, private mrs: MensaRouteService) {
+  }
+
+  getWeekdaysArr(mensa: Mensa) {
+    return Object.values(mensa.weekdays)
   }
 
 }

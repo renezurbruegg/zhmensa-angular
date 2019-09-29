@@ -8,6 +8,7 @@ import { Weekday } from '../models/weekday';
 
 import { HttpClient } from '@angular/common/http';
 import { from, Subject, BehaviorSubject } from 'rxjs';
+import { Poll, PollOption } from '../models/poll';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +23,7 @@ export class MensaService {
 
     currentMensa: Mensa;
 
-    path: string = "http://localhost:8080/api/getAllMensas";
+    path: string = "http://mensazh.vsos.ethz.ch:8080/api/getMensaForTimespan"; //?start=2019-09-23&end=2019-09-25";
 
     favKey: string = "favoriteList";
     hideKey:string = "hideList";
@@ -30,6 +31,11 @@ export class MensaService {
     mensaList: Record<string, Mensa>;
 
     idToNameMapping: Array<string> = [];
+
+    public dateArray: Array<string> = []; // Contains all loaded dates in format yyyy-mm-dd
+    public startDate : string;
+    endDate: string;
+    public startDateObj: Date;
 
     public selectedMensaName: Subject<any> = new BehaviorSubject(false);
     selectedMensaName$ = this.selectedMensaName.asObservable();
@@ -48,8 +54,35 @@ export class MensaService {
     favoriteMenuIdList : Array<String> = [];
     hiddenMenuIdList : Array<String> = [];
 
-    favoriteMensa : FavoriteMensa = new FavoriteMensa();
+    favoriteMensa : FavoriteMensa;
 
+
+
+    public getMenuForPollOption(poll: Poll, pollOption: PollOption) {
+        let dateStr = this.dateArray[poll.weekday];
+        if(!pollOption.menu)
+          pollOption.menu = this.getMenuForMensaAndId(pollOption.mensaId, pollOption.menuId, poll.mealType, dateStr);
+        return pollOption.menu;
+    }
+
+    private getMenuForMensaAndId(mensaId: string, menuId: string, mealType: string, weekday:string) : Menu{
+      if(this.mensaList.hasOwnProperty(mensaId)) {
+        let mensa : Mensa = this.mensaList[mensaId];
+        if(mensa.weekdays.hasOwnProperty(weekday)) {
+          let day: Weekday = mensa.weekdays[weekday];
+          if(day.mealTypes.hasOwnProperty(mealType.toLowerCase())) {
+            let mealTypeObj : MealType = day.mealTypes[mealType.toLowerCase()];
+            for(let menu of mealTypeObj.menus) {
+              if(menu.id == menuId) {
+                return menu;
+              }
+            }
+          }
+        }
+      }
+      return new DummyMenu(mensaId + " - " + menuId);
+
+    }
 
     public removeFavoriteMenuId(menuId: String) {
       console.log("remove")
@@ -115,11 +148,14 @@ export class MensaService {
                 this.addMenusToFavoriteMensa(this.mensaList[name]);
               }
 
-              this.favoriteMensa.weekdays.forEach( (day: Weekday) => {
-                day.mealTypes.forEach( (type: MealType) => {
+              Object.values(this.favoriteMensa.weekdays).forEach( (day: Weekday) => {
+                Object.values(day.mealTypes).forEach( (type: MealType) => {
+                  // Create hidden copy. _menus contains all unfiltered menus. type.menus will contain all menus that match the filter.
                   type._menus = type.menus;
                 });
               });
+              console.log(this.favoriteMensa)
+              console.log("resolve")
 
               resolve();
             }
@@ -131,6 +167,36 @@ export class MensaService {
 
     constructor(private http: HttpClient) {
       console.log("mensa service constructor");
+
+      let date:Date = new Date();
+      let day = date.getDay();
+
+      if(day == 0) {
+        date.setDate(date.getDate() + 1);
+      } else if(day == 6) {
+        date.setDate(date.getDate() + 2)
+      } else {
+        date.setDate(date.getDate() + ( 1 - day))
+      }
+
+      this.startDate = date.toISOString().slice(0,10);
+      this.startDateObj = new Date(date.getTime());
+      this.dateArray.push(this.startDate)
+      date.setDate(date.getDate() + 1);
+
+      for (let i = 1; i < 4; i++) {
+          this.dateArray.push(date.toISOString().slice(0,10))
+          date.setDate(date.getDate() + 1);
+      }
+      this.endDate = date.toISOString().slice(0,10)
+      this.dateArray.push(this.endDate)
+      console.log(this.dateArray)
+//?start=2019-09-23&end=2019-09-25"
+      this.path = this.path + "?start="+this.startDate + "&end="+this.endDate;
+      console.log(this.path)
+
+      this.favoriteMensa = new FavoriteMensa(this.dateArray);
+
 
       this.hiddenMenuIdList = JSON.parse(localStorage.getItem(this.hideKey));
       this.favoriteMenuIdList = JSON.parse(localStorage.getItem(this.favKey));
@@ -155,21 +221,43 @@ export class MensaService {
       })
   }
 
-  addMenusToFavoriteMensa(mensa: Mensa) : void{
+
+  addMenusToWeekday(day: Weekday, mealTypes: Array<MealType>) {
+    mealTypes.forEach( (mealtype: MealType) => {
+      let label = mealtype.label;
+      if(day.mealTypes.hasOwnProperty(label)) {
+        day.mealTypes[label].menus = day.mealTypes[label].menus.concat(mealtype.menus);
+      } else {
+        console.log("mealtype " + label + " not found in favorite mensa")
+        day.mealTypes[label] = mealtype;
+      }
+    })
+  }
+
+
+  addMenusToFavoriteMensa(mensa: Mensa) : void {
     console.log("adding all menus to favorite mensa");
-    mensa.weekdays.forEach((day : Weekday, index : number) => {
+    console.log(Object.values(mensa.weekdays));
+
+
+    for(let dayStr of this.dateArray) {
+        if (mensa.weekdays.hasOwnProperty(dayStr)) {
+          let day: Weekday =  mensa.weekdays[dayStr];
+          if(this.favoriteMensa.weekdays.hasOwnProperty(dayStr)) {
+            this.addMenusToWeekday(this.favoriteMensa.weekdays[dayStr], Object.values(day.mealTypes));
+          } else {
+            this.favoriteMensa.weekdays[dayStr] = day;
+          }
+        }
+    }
+
+/*    Object.values(mensa.weekdays).forEach((day : Weekday, index : number) => {
       let favoriteMensaDay = this.favoriteMensa.weekdays[day.number];
 
       for(let mealtype of day.mealTypes) {
-        let label = mealtype.label;
-        favoriteMensaDay.mealTypes.forEach( (type: MealType, position: number) => {
-          if (label == type.label) {
-            console.log("found matching mealtype");
-            type.menus = type.menus.concat(mealtype.menus);
-          }
-        });
+
       }
-    });
+    });*/
     console.log(this.favoriteMensa);
   }
 
@@ -190,8 +278,8 @@ export class MensaService {
   }
 
   public filter(mensa:Mensa, initMenus:boolean , filter: (menu:Menu) => boolean) {
-    mensa.weekdays.forEach((day: Weekday) => {
-      day.mealTypes.forEach((type: MealType) => {
+    Object.values(mensa.weekdays).forEach((day: Weekday) => {
+      Object.values(day.mealTypes).forEach((type: MealType) => {
         if(initMenus) {
           type._menus = type.menus;
         }
@@ -212,6 +300,10 @@ export class MensaService {
     return filteredList;
   }
 
+  getDummyMenu(numb: number) {
+    return new DummyMenu(numb);
+  }
+
 
 }
 
@@ -219,18 +311,19 @@ export class MensaService {
     name: String;
     category: String;
     isClosed: boolean;
-    weekdays: Weekday[];
+    weekdays: Record<string, Weekday>;
 
     constructor(name: String) {
       this.name = name;
       this.isClosed = false;
-      this.weekdays = [];
+      this.weekdays = {};
       this.category = "None";
       ["Mo", "Di", "Mi", "Do", "Fr"].forEach ( (label:string, pos: number) => {
-        this.weekdays.push(new DummyWeekday(label, pos));
+        this.weekdays[label] = new DummyWeekday(label, pos);
       });
     }
   }
+
 
 
   class DummyMenu implements Menu {
@@ -255,24 +348,22 @@ export class MensaService {
      name: String;
      category: String;
      isClosed: boolean;
-     weekdays: Weekday[];
+     weekdays: Record<string, Weekday>;
 
-     constructor() {
+     constructor(dateArray) {
        this.name = "Favorites";
        this.isClosed = false;
-       this.weekdays = [];
+       this.weekdays = {};
        this.category = "None";
        ["Mo", "Di", "Mi", "Do", "Fr"].forEach ( (label:string, pos: number) => {
-         this.weekdays.push(new DummyWeekday(label, pos));
+         this.weekdays[dateArray[pos]] = new DummyWeekday(label, pos);
        });
-
      }
-
    }
 
   class DummyMealtype implements MealType {
 
-    label: String;
+    label: string;
     menus: Menu[];
 
     constructor(label:string) {
@@ -285,16 +376,17 @@ export class MensaService {
 
   class DummyWeekday implements Weekday {
     label: String;
-    mealTypes: MealType[];
+    mealTypes: Record<string, MealType>;
     number: number;
+    date:String;
 
     constructor(dayName: String, number:number) {
+      this.date = "?"
       this.label = dayName;
       this.number = number;
-      this.mealTypes = [];
+      this.mealTypes = {};
       for (let i of ["lunch", "dinner"]) {
-          this.mealTypes.push(new DummyMealtype(i));
-
+          this.mealTypes[i] = new DummyMealtype(i);
     }
   }
 }

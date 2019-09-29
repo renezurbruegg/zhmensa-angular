@@ -17,6 +17,14 @@ export class MenuCardComponentComponent implements OnInit {
 
  }
 
+   getPrices() {
+     let ret : string = "";
+     ["student", "staff", "extern"].forEach( (value:string) => {
+       ret+= ret == "" ? "" : " / "
+       ret += this.menu.prices[value];
+     } )
+     return ret;
+   }
    getMenuName() : String {
     if(this.mensaService.selectedMensaShowName) {
       return this.menu.mensa + ": " + this.menu.name;

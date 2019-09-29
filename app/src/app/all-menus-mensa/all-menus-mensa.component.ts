@@ -49,8 +49,8 @@ export class AllMenusMensaComponent implements OnInit {
   breakpoint: number;
 
   filterStoredMensa(filter: (menu: Menu) => boolean): void {
-    this.mensa.weekdays.forEach((day: Weekday) => {
-      day.mealTypes.forEach((type: MealType) => {
+    Object.values(this.mensa.weekdays).forEach((day: Weekday) => {
+      Object.values(day.mealTypes).forEach((type: MealType) => {
         type.menus = this.filterMenus(type._menus, filter);
       })
     })
@@ -79,4 +79,7 @@ export class AllMenusMensaComponent implements OnInit {
   }
 
 
+    getWeekdaysArr(mensa: Mensa) {
+      return Object.values(mensa.weekdays)
+    }
 }

@@ -3,7 +3,7 @@ export interface Menu {
   name: String;
 
   id : String;
-  prices: String;
+  prices: Record<string,String>;
   description: String;
 
   allergene?: Array<String>;
