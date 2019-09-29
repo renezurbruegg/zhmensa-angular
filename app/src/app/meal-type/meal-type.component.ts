@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Menu } from '../models/menu';
-import { MealType } from '../models/MealType';
+import { MealType } from '../models/mealtype';
 
 @Component({
   selector: 'app-meal-type',

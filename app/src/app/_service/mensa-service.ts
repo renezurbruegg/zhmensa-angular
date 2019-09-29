@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Menu } from '../models/menu';
 import { Mensa } from '../models/mensa';
-import { MealType } from '../models/MealType';
+import { MealType } from '../models/mealtype';
 import { Weekday } from '../models/weekday';
 
 

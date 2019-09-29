@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Menu } from '../models/menu';
 import { Mensa } from '../models/mensa';
-import { MealType } from '../models/MealType';
-import { Weekday } from '../models/weekday';
 import { ActivatedRoute } from '@angular/router';
 import { MensaService } from '../_service/mensa-service';
 
