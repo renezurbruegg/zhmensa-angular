@@ -5,5 +5,5 @@ export interface Mensa {
   navigationId?: number;
   category: String;
   isClosed: boolean;
-  weekdays: Array<Weekday>;
+  weekdays: Record<string, Weekday>;
 }

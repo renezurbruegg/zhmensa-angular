@@ -16,4 +16,8 @@ export class WeekdayComponent implements OnInit {
   ngOnInit() {
   }
 
+  getMealTypesArr(day : Weekday) {
+    return Object.values(day.mealTypes);
+  }
+
 }

@@ -35,4 +35,8 @@ export class MensaComponentComponent implements OnInit{
   constructor(  private route: ActivatedRoute, private mensaService: MensaService) {
   }
 
+
+    getWeekdaysArr(mensa: Mensa) {
+      return Object.values(mensa.weekdays)
+    }
 }

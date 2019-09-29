@@ -1,0 +1,44 @@
+
+<mat-card class="menu-card">
+
+  <mat-card-header style="width:100%">
+
+     <div fxFlex></div> <div class="vegi"><div class="vegi-badge">vegi</div></div>
+    <mat-card-title>{{getMenuName()}}</mat-card-title>
+
+    <mat-card-subtitle>{{getPrices()}}</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <p>
+    {{menu.description}}
+    </p>
+          <p *ngIf = "menu.isExpanded">Allergene:  {{menu.allergene}}</p>
+
+
+
+  </mat-card-content>
+
+  <mat-card-actions>
+    <div fxLayout="row">
+       <div fxFlex style="margin-right:20px; padding-top:20px">
+         <mat-progress-bar
+           class="example-margin"
+           [color]="accent"
+           [mode]="determinate"
+           [value]="getPbValue()"
+           [bufferValue]="0">
+           </mat-progress-bar>
+         </div>
+<div *ngIf = "!pollOption.userVoted">
+       <button  (click)="toggleVote()" mat-icon-button style="float:right"><mat-icon fontSet="material-icons-outlined">thumb_up</mat-icon></button>
+</div>
+<div *ngIf = "pollOption.userVoted">
+     <button  (click)="toggleVote()" mat-icon-button style="float:right"><mat-icon fontSet="material-icons">thumb_up</mat-icon></button>
+  </div>
+</div>
+
+
+
+  </mat-card-actions>
+</mat-card>

@@ -1,0 +1,59 @@
+<div *ngIf="poll$ | async as poll">
+  <h2> {{poll.title}} </h2>
+  <h3>Stimmen: {{poll.votecount}} </h3>
+  <div class="preview">
+
+    <div layout="row" flex>
+     <div *ngFor = "let topOption of previewOptions">
+
+
+          <div fxLayout="column" *ngIf ="topOption.menu">
+            <div style="text-overflow: ellipsis;">
+              {{topOption.mensaId}} {{topOption.menu.name}} ({{topOption.votes}}/{{poll.votecount}}):
+              </div>
+             <div fxFlex style="margin-right:20px; margin-left: 20px; padding-top:10px; margin-bottom:20px; max-width: 500px">
+               <mat-progress-bar
+                class="example-margin"
+                [color]="accent"
+                [mode]="determinate"
+                [value]="getPbValue(topOption)"
+                [bufferValue]="0">
+                </mat-progress-bar>
+               </div>
+               </div>
+
+<!--    <div layout="row" flex>
+ <div *ngFor = "let topOption of previewOptions">
+      <div fxLayout="row" *ngIf ="topOption.menu" style="max-width: 500px">
+        <div style="width:200px; text-overflow: ellipsis;">
+          {{topOption.mensaId}} {{topOption.menu.name}} ({{topOption.votes}}/{{poll.votecount}}):
+          </div>
+         <div fxFlex style="margin-right:20px; padding-top:10px">
+           <mat-progress-bar
+            class="example-margin"
+            [color]="accent"
+            [mode]="determinate"
+            [value]="getPbValue(topOption)"
+            [bufferValue]="0">
+            </mat-progress-bar>
+           </div>
+           </div>
+
+
+      </div> -->
+
+  </div>
+  <div fxLayoutAlign="space-evenly" style="width:100%" class="content">
+    <div class="content" fxLayoutAlign="space-evenly" fxFlex.gt-xs="500px" fxFlex.gt-sm="800px" fxFlex.gt-md="1000px" fxFlex.gt-lg="1140px">
+
+      <div fxLayout="row wrap" fxLayoutAlign="space-evenly">
+        <ng-container *ngFor="let option of poll.options">
+            <app-poll-card-component [pollOption]="option" [poll]="poll">
+            </app-poll-card-component>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+
+</div>
