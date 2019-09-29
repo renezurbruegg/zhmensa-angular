@@ -60,7 +60,9 @@ export class AppComponent {
   public routes: ROUTE[] = [
   ];
 
-
+public get isToggleEnabled(){
+  return true;
+}
 
 
 private addMensaToNavigation(mensa: Mensa) {

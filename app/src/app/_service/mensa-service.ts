@@ -329,8 +329,8 @@ export class MensaService {
   class DummyMenu implements Menu {
     mensa: String = "Dummy";
     name: String = "Dummy";;
-    id: String = "Dummy";;
-    prices: String = "8.50, 9.50, 10.50";;
+    id: String = "Dummy";
+    prices: Record<string,String> = {student: "8.50", staff:"9.50", extern: "10.50"};
     description: String = "Chili Bacon Cheeseburger \nSesam Bun, Beefburger \noder Vegi-Burger, Lattich, \nCheddar, Zwiebeln, Jalapenos,\nSpeck und Chilisauce\nPommes frites";
     allergene?: Array<String>;
     isVegi: boolean = false;
