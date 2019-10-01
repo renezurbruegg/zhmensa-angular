@@ -28,7 +28,16 @@ import { PollOptionComponent } from './poll-option/poll-option.component';
 import { PollCardComponentComponent } from './poll-card-component/poll-card-component.component';
 
 
+import * as Hammer from 'hammerjs';
+import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 // import { MatMomentDateModule } from '@angular/material-moment-adapter';
+
+
+export class MyHammerConfig extends HammerGestureConfig {
+  overrides = <any> {
+    swipe: { direction: Hammer.DIRECTION_ALL },
+  };
+}
 
 /**
 * loads the config from the backend.
@@ -62,6 +71,10 @@ export function initializeApp(mensaService: MensaService) {
     AppRoutingModule,GridModule , BrowserAnimationsModule,ReactiveFormsModule, FormsModule,MatProgressBarModule,
   NgMatSearchBarModule],
   providers: [MensaService, MensaRouteService,
+    {
+      provide: HAMMER_GESTURE_CONFIG,
+      useClass: MyHammerConfig,
+    },
     // Call initializeApp before application boots
   { provide: APP_INITIALIZER,  useFactory: initializeApp,  deps: [MensaService], multi: true }],
   bootstrap: [AppComponent]

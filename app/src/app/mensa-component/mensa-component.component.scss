@@ -8,3 +8,29 @@
   border-top: 1px solid black !important;
   padding-bottom:  2px;
 }
+
+
+
+.mat-tab-label{
+  color:red !important;
+    border: 1px solid gray;
+    &:last-child{
+        border: 0;
+    }
+}
+
+
+.mat-tab-label:after {
+    /* border-right: 1px solid lightgray; */
+    /* margin-top: 10px; */
+    /* -webkit-box-shadow: -5px 4px 0px -4px blue; */
+    -moz-box-shadow: -5px 4px 0px -4px blue;
+    /* box-shadow: -5px 4px 0px -4px blue; */
+    position: absolute;
+    /* top: 1em; */
+    left: 0;
+    content: "";
+    width: 1px;
+    height: 70%;
+    background-color: lightgray;
+}

@@ -5,16 +5,18 @@
 
   <mat-card-header style="width:100%">
 
-     <div fxFlex></div> <div class="vegi"><div class="vegi-badge">vegi</div></div>
+     <div fxFlex></div> <div *ngIf="menu.isVegi" class="vegi"><div class="vegi-badge">vegi</div></div>
     <mat-card-title>{{getMenuName()}}</mat-card-title>
 
     <mat-card-subtitle>{{getPrices()}}</mat-card-subtitle>
   </mat-card-header>
 
   <mat-card-content>
-    <p>
-    {{menu.description}}
-    </p>
+    <ng-container *ngFor="let line of menu.description;">
+      {{line}}
+      <br>
+    </ng-container>
+  
           <p *ngIf = "menu.isExpanded">Allergene:  {{menu.allergene}}</p>
   </mat-card-content>
 

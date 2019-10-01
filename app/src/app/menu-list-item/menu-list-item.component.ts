@@ -44,8 +44,12 @@ export class MenuListItemComponent implements OnInit {
 
   onItemSelected(item: NavItem, drawer:any) {
     if (!item.children || !item.children.length) {
-      if(this.isToggleEnabled)
+      if(this.isToggleEnabled){
          drawer.toggle();
+         // Really really ugly fix to remove selected state on toggle button
+         document.getElementById("toggleButton").classList.remove("cdk-focused");
+         document.getElementById("toggleButton").classList.remove("cdk-program-focused");
+       }
       this.router.navigate([item.route]);
       // this.navService.closeNav();
     }

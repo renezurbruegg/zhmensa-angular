@@ -6,7 +6,7 @@
 			<mat-toolbar color="primary">Mensen</mat-toolbar>
 
 		<mat-nav-list>
-			<app-menu-list-item *ngFor="let item of navItems" [item]="item" [drawer]="drawer" [isToggleEnabled]="isToggleEnabled">
+			<app-menu-list-item *ngFor="let item of navItems" [item]="item" [drawer]="drawer" [isToggleEnabled]="(isHandset$ | async) ">
 
 		</app-menu-list-item>
 		<!--	<a routerLink="/menus">menus</a> -->
@@ -18,14 +18,14 @@
 	<mat-sidenav-content>
 		<mat-toolbar color="primary" class="position-fixed">
 
-    <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
+    <button type="button" id = "toggleButton" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
       <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
     </button>
       <span class="mat-spacer"></span>
       <span>{{title}}</span>
 	      <span fxFlex="auto"></span>
 
-				<div class="example-container">
+				<div *ngIf="!(isHandset$ | async)" class="example-container">
 	  <form class="example-container" [formGroup]="searchForm">
 		<mat-form-field class="search-field">
     <input matInput type="search" placeholder="search here" class="search-input" formControlName="searchCtrl">
@@ -36,7 +36,7 @@
 </div>
     </mat-toolbar>
 
-		<div class="content"style="width:100%" >
+		<div class="content gesture__zone"style="width:100%"  (swipe)="onSwipe($event)">
 
 
 <router-outlet></router-outlet>

@@ -1,4 +1,11 @@
 .mat-list-item.active {
-  color:#673ab7;
+
+  /*color: $primary; TODO FIX that this is working. Stupid angular theming @$++! */
+  color:#7bb33a; /* ugly hardcoded */
   background-color: #f2f2f2;
+}
+
+
+.routeIcon {
+    margin-right: 5px;
 }

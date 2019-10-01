@@ -2,3 +2,19 @@
   font-size: 14px;
 margin-bottom: -10px;
 }
+
+
+.mat-tab-label:after {
+    /* border-right: 1px solid lightgray; */
+    /* margin-top: 10px; */
+    /* -webkit-box-shadow: -5px 4px 0px -4px blue; */
+    -moz-box-shadow: -5px 4px 0px -4px blue;
+    /* box-shadow: -5px 4px 0px -4px blue; */
+    position: absolute;
+    /* top: 1em; */
+    left: 0;
+    content: "";
+    width: 1px;
+    height: 70%;
+    background-color: lightgray;
+}

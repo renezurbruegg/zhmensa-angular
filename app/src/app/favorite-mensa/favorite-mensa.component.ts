@@ -6,6 +6,7 @@ import { Menu } from '../models/menu';
 import { Weekday } from '../models/weekday';
 import { MealType } from '../models/mealtype';
 import { MensaRouteService } from '../mensa-route.service';
+import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-favorite-mensa',
@@ -44,9 +45,21 @@ export class FavoriteMensaComponent implements OnInit {
             this.filterStoredMensa(() => true);
       })
 
+      this.breakpointObserver
+        .observe([Breakpoints.Small, Breakpoints.HandsetPortrait])
+        .subscribe((state: BreakpointState) => {
+          if (state.matches) {
+            console.log(
+              'Matches small viewport or handset in portrait mode'
+            );
+
+          }
+            this.isSmallScreen = state.matches;
+        });
+        this.mensaService.selectedMensaName.next("Favoriten")
   }
 
-
+  isSmallScreen: boolean = false;
 
   mensa: Mensa;
   breakpoint: number;
@@ -78,7 +91,16 @@ export class FavoriteMensaComponent implements OnInit {
     return false;
   }
 
-  constructor(private route: ActivatedRoute, private mensaService: MensaService, private mrs: MensaRouteService) {
+
+    getDayLabel(day: Weekday) : string {
+      return this.isSmallScreen ? this.mensaService.WEEKDAYS_SHORT[day.number] :  this.mensaService.WEEKDAYS_LONG[day.number]
+    }
+
+    loadMensa(id: number): void {
+        this.mensa =  this.mensaService.getMensaForId(id);
+    }
+
+  constructor(private route: ActivatedRoute, private mensaService: MensaService, private mrs: MensaRouteService, public breakpointObserver: BreakpointObserver) {
   }
 
   getWeekdaysArr(mensa: Mensa) {

@@ -4,7 +4,7 @@ export interface Menu {
 
   id : String;
   prices: Record<string,String>;
-  description: String;
+  description: any; //TODO change backend
 
   allergene?: Array<String>;
   isVegi: boolean;

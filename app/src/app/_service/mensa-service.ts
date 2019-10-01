@@ -21,18 +21,16 @@ Main Service. Provides access to all Mensa instances.
 */
 export class MensaService {
 
+    public WEEKDAYS_LONG = ["Montag", "Dientag", "Mittwoch", "Donnerstag", "Freitag"]
+    public WEEKDAYS_SHORT =["Mo", "Di","Mi", "Do", "Fr"]
     /**
     Flag that is set if the mensa that is currently selected has menüs that needs to show the Mensa name
     e.g. Favorite Mensa, All Menus Mensa
-
-    Buggy if mutliple tabs are open.
-    @TODO fix
     */
     public selectedMensaShowName: boolean = false;
 
     /**
     Mensa that is currently selected.
-    @TODO fix for multiple tabs
     */
     currentMensa: Mensa;
 
@@ -74,6 +72,7 @@ export class MensaService {
       The end date that was laoded (Friday)
     */
     endDate: string;
+
 
     /**
     Subject that gets updated when a new mensa is selected
@@ -191,6 +190,10 @@ export class MensaService {
       }
     }
 
+
+  public getMensaNames(){
+    return this.idToNameMapping;
+  }
     /**
     Returns a function that matches all menus that are markes as favorites
     */
@@ -198,6 +201,36 @@ export class MensaService {
       return (menu: Menu) => {
         return this.favoriteMenuIdList.includes(menu.id);
       }
+    }
+
+    private getMensaNamesOrdered(map: Record<string,Mensa>) : Array<string> {
+      let ret : Array<string>= [];
+      let cat: Record<string,Array<string>> = {
+        "ETH-Zentrum" : [],
+        "ETH-Hönggerberg" : [],
+        "UZH-Zentrum": [],
+        "UZH-Irchel": []
+      };
+
+      for(let name in map ){
+        let mensa: Mensa = map[name];
+
+        if(cat.hasOwnProperty(mensa.category+"")) {
+          cat[mensa.category+""].push(name)
+        } else {
+            cat[mensa.category+""] = [name]
+        }
+      }
+      console.log(cat)
+
+      for(let category in cat) {
+        cat[category].sort()
+        ret = ret.concat(cat[category]);
+      }
+      console.log("returning")
+      console.log(ret)
+
+      return ret;
     }
       /**
       * Loads all mensas from the API
@@ -209,12 +242,14 @@ export class MensaService {
           this.http.get(this.path).toPromise().then(
             (response: Record<string,Mensa>) => {
               this.mensaList = response;
+              this.idToNameMapping = this.getMensaNamesOrdered(this.mensaList);
 
-              for(let name in this.mensaList ){
-                this.mensaList[name].navigationId = this.idToNameMapping.length;
-                this.idToNameMapping.push(name);
-                this.addMenusToFavoriteMensa(this.mensaList[name]);
+              for (var _i = 0; _i < this.idToNameMapping.length; _i++) {
+                this.mensaList[this.idToNameMapping[_i]].navigationId = _i;
+            //    this.idToNameMapping.push(name);
+                this.addMenusToFavoriteMensa(this.mensaList[this.idToNameMapping[_i]]);
               }
+
 
               Object.values(this.favoriteMensa.weekdays).forEach( (day: Weekday) => {
                 Object.values(day.mealTypes).forEach( (type: MealType) => {

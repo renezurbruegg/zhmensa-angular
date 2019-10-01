@@ -17,6 +17,16 @@ export class MenuCardComponentComponent implements OnInit {
 
  }
 
+  getDescription(menu: Menu) {
+    if(typeof menu.description == "string") {
+      return  menu.description ;
+    }
+    let ret = "";
+    for (let l of menu.description) {
+      ret += l + "\n";
+    }
+    return ret;
+  }
    getPrices() {
      let ret : string = "";
      ["student", "staff", "extern"].forEach( (value:string) => {

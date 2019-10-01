@@ -1,6 +1,6 @@
 <mat-tab-group mat-stretch-tabs color="accent" >
 
-  <mat-tab *ngFor="let day of getWeekdaysArr(mensa)" [label]="day.label">
+  <mat-tab *ngFor="let day of getWeekdaysArr(mensa)" [label]="getDayLabel(day)">
     <app-weekday
     [day] = "day"></app-weekday>
   </mat-tab>
