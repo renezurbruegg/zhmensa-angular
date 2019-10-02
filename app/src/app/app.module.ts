@@ -35,11 +35,21 @@ import { PollPreviewComponent } from './poll-preview/poll-preview.component';
 // import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
 
+export class MyHammerConfig extends HammerGestureConfig  {
+  buildHammer(element: HTMLElement) {
+    let mc = new Hammer(element, {
+      touchAction: "auto",
+    });
+    return mc;
+  }
+}
+
+/*
 export class MyHammerConfig extends HammerGestureConfig {
   overrides = <any> {
     swipe: { direction: Hammer.DIRECTION_HORIZONTAL},
   };
-}
+} */
 
 /**
 * loads the config from the backend.
