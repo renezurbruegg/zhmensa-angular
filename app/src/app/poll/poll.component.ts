@@ -36,6 +36,8 @@ export class PollComponent implements OnInit {
 
   this.poll$.subscribe((poll : Poll) => {
     this.poll = poll;
+    this.mensaService.selectedMensaName.next(poll.title);
+
     this.pollService.addKnownPollId(poll.id);
     this.updateTopVotes(poll);
     this.previewOptions.forEach((pollOption: PollOption) => {
