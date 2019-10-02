@@ -1,4 +1,4 @@
-<div *ngIf="poll$ | async as poll">
+<div *ngIf="poll$ | async as poll" class="poll-content">
   <h2> {{poll.title}} </h2>
   <h3>Stimmen: {{poll.votecount}} </h3>
   <div class="preview">

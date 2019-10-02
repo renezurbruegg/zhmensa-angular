@@ -38,17 +38,18 @@ export class AppComponent {
 
 
   public navItems: NavItem[] = [
-    {
+  /*  {
       displayName: 'Alle ',
       iconName: 'list',
       route: '/all',
       loginRequired: false,
       children: []
-    }, {
+    },*/ {
       displayName: 'Favoriten ',
       iconName: 'favorite',
       route: '/favorites',
       loginRequired: false,
+      matIcon: true,
       children: []
     }
 
@@ -78,7 +79,8 @@ export class AppComponent {
     if (parentItem == null) {
       parentItem = {
         displayName: mensa.category + "",
-        iconName: '',
+        pngIcon:true,
+        iconName: mensa.category.includes("ETH")  ? "assets/ic_eth.png" : "assets/ic_uzh.png",
         route: '',
         loginRequired: false,
         children: []
@@ -108,22 +110,24 @@ export class AppComponent {
   }
 
   onSwipe(evt) {
-      if(Math.abs(evt.deltaX) > 40) {
-        console.log(this.activatedRoute)
-        console.log(this.mensaService.currentMensa)
+      if(Math.abs(evt.deltaX) > 80) {
 
         if(this.mensaService.currentMensa) {
+          console.log(this.mensaService.currentMensa)
             let id : number =  this.mensaService.currentMensa.navigationId;
 
             if(evt.deltaX < 0) {
               id+= 1;
               if(id == (this.mensaService.idToNameMapping.length- 1))
                 return;
-              console.log("id: " + this.mensaService.currentMensa.navigationId)
               // Right swipe
             } else {
-              if(id == 0)
+              if(id == -1)
                 return;
+              if(id == 0) {
+                  this.router.navigate(["/favorites"]);
+                  return;
+                }
               id-=1;
               // left swipe
             }
@@ -145,6 +149,14 @@ export class AppComponent {
     for (let name of mensaService.getMensaNames()) {
       this.addMensaToNavigation(mensaMap[name]);
     }
+    this.navItems.push( {
+      displayName: 'Umfragen',
+      iconName: 'poll',
+      route: '/poll',
+      loginRequired: false,
+      matIcon:true,
+      children: []
+    });
 
 
     this.searchForm.controls["searchCtrl"].valueChanges.subscribe(

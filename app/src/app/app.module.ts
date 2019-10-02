@@ -30,12 +30,14 @@ import { PollCardComponentComponent } from './poll-card-component/poll-card-comp
 
 import * as Hammer from 'hammerjs';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
+import { PollOverviewComponent } from './poll-overview/poll-overview.component';
+import { PollPreviewComponent } from './poll-preview/poll-preview.component';
 // import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
 
 export class MyHammerConfig extends HammerGestureConfig {
   overrides = <any> {
-    swipe: { direction: Hammer.DIRECTION_ALL },
+    swipe: { direction: Hammer.DIRECTION_HORIZONTAL},
   };
 }
 
@@ -60,7 +62,9 @@ export function initializeApp(mensaService: MensaService) {
     AllMenusMensaComponent,
     PollComponent,
     PollOptionComponent,
-    PollCardComponentComponent
+    PollCardComponentComponent,
+    PollOverviewComponent,
+    PollPreviewComponent
 
   ],
   imports: [MatInputModule,

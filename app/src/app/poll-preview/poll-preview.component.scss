@@ -1,0 +1,18 @@
+// Import _variables.css to the component's sass file where you want to use it.
+@import "./../../_variable.scss";
+
+.menu-card{
+  width: 300px;
+  margin:7px;
+}
+
+.vegi-badge {
+  border: 1px solid  darken( $primary, 10% );
+  border-radius: 5px;
+  background-color:  darken( $primary, 10% );
+  padding:3px;
+  padding-left: 5px;
+  padding-right: 5px;
+  font-size: 14px;
+  color:white;
+}

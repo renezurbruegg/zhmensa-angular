@@ -1,0 +1,45 @@
+
+
+
+<div *ngIf="pollList$ | async as pollList">
+
+
+  <div fxLayoutAlign="space-evenly" style="width:100%" class="content">
+    <div class="content" fxLayoutAlign="space-evenly" fxFlex.gt-xs="500px" fxFlex.gt-sm="800px" fxFlex.gt-md="1000px" fxFlex.gt-lg="1140px">
+
+      <div fxLayout="row wrap" fxLayoutAlign="space-evenly">
+
+
+        <ng-container *ngFor = "let poll of pollList">
+          <app-poll-preview [poll] = "poll">
+          </app-poll-preview>
+          </ng-container>
+
+
+        <ng-container *ngIf = "pollList.length == 0">
+
+          <mat-card class="menu-card-empty">
+
+            <mat-card-header style="width:100%">
+
+              <mat-card-title>Keine Umfragen</mat-card-title>
+
+              <mat-card-subtitle></mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+              Es wurden keine Umfragen gefunden
+
+            </mat-card-content>
+
+            <mat-card-actions>
+
+            </mat-card-actions>
+          </mat-card>
+
+
+          </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

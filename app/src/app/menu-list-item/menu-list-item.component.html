@@ -1,7 +1,8 @@
 <a mat-list-item [ngStyle]="{'padding-left': (depth * 12) + 'px'}" (click)="onItemSelected(item, drawer)"
    [ngClass]="{'active': item.route ? router.isActive(item.route, true): false, 'expanded': expanded}"
    class="menu-list-item">
-  <mat-icon class="routeIcon">{{item.iconName}}</mat-icon>
+  <mat-icon *ngIf = "item.matIcon" class="routeIcon">{{item.iconName}}</mat-icon>
+  <img *ngIf = "item.pngIcon" class="cat-icon" [src]="item.iconName">
   {{item.displayName}}
   <span fxFlex *ngIf="item.children && item.children.length">
     <span fxFlex></span>

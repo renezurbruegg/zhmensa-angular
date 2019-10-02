@@ -113,6 +113,59 @@ export class MensaService {
     favoriteMensa : FavoriteMensa;
 
 
+    constructor(private http: HttpClient) {
+      let date:Date = new Date();
+
+      let day = date.getDay();
+
+      if(day == 0) {
+        date.setDate(date.getDate() + 1);
+      } else if(day == 6) {
+        date.setDate(date.getDate() + 2)
+      } else {
+        date.setDate(date.getDate() + ( 1 - day))
+      }
+
+      this.startDate = date.toISOString().slice(0,10);
+      this.dateArray.push(this.startDate)
+      date.setDate(date.getDate() + 1);
+
+      for (let i = 1; i < 4; i++) {
+          this.dateArray.push(date.toISOString().slice(0,10))
+          date.setDate(date.getDate() + 1);
+      }
+      this.endDate = date.toISOString().slice(0,10)
+      this.dateArray.push(this.endDate)
+      // Date array contains all dates for which menus will be loaded
+
+      this.path = this.path + "?start="+this.startDate + "&end="+this.endDate;
+      // add start and end timestamps to path
+
+      this.favoriteMensa = new FavoriteMensa(this.dateArray);
+
+      //Load stored favorites and hidden menu ids
+
+      this.hiddenMenuIdList = JSON.parse(localStorage.getItem(this.hideKey));
+      this.favoriteMenuIdList = JSON.parse(localStorage.getItem(this.favKey));
+
+      if(!this.hiddenMenuIdList) {
+        this.hiddenMenuIdList = [];
+      }
+
+      if(!this.favoriteMenuIdList){
+          this.favoriteMenuIdList = [];
+      }
+
+      // Creates filter for search bar (top right)
+      this.generalFilter$.subscribe( filter => {
+        if(this.currentMensa) {
+          this.filter(this.currentMensa, false, (menu: Menu) =>
+        {
+            return !filter || filter =="" || ("" + menu.name + menu.description + menu.prices + menu.allergene).toLowerCase().includes((filter + "").toLowerCase());
+        });
+        }
+      })
+    }
 
     /**
     Returns the Menu item that belongs to a given pollOption and Poll.
@@ -221,14 +274,11 @@ export class MensaService {
             cat[mensa.category+""] = [name]
         }
       }
-      console.log(cat)
 
       for(let category in cat) {
         cat[category].sort()
         ret = ret.concat(cat[category]);
       }
-      console.log("returning")
-      console.log(ret)
 
       return ret;
     }
@@ -265,59 +315,7 @@ export class MensaService {
         });
       };
 
-    constructor(private http: HttpClient) {
-      let date:Date = new Date();
 
-      let day = date.getDay();
-
-      if(day == 0) {
-        date.setDate(date.getDate() + 1);
-      } else if(day == 6) {
-        date.setDate(date.getDate() + 2)
-      } else {
-        date.setDate(date.getDate() + ( 1 - day))
-      }
-
-      this.startDate = date.toISOString().slice(0,10);
-      this.dateArray.push(this.startDate)
-      date.setDate(date.getDate() + 1);
-
-      for (let i = 1; i < 4; i++) {
-          this.dateArray.push(date.toISOString().slice(0,10))
-          date.setDate(date.getDate() + 1);
-      }
-      this.endDate = date.toISOString().slice(0,10)
-      this.dateArray.push(this.endDate)
-      // Date array contains all dates for which menus will be loaded
-
-      this.path = this.path + "?start="+this.startDate + "&end="+this.endDate;
-      // add start and end timestamps to path
-
-      this.favoriteMensa = new FavoriteMensa(this.dateArray);
-
-      //Load stored favorites and hidden menu ids
-
-      this.hiddenMenuIdList = JSON.parse(localStorage.getItem(this.hideKey));
-      this.favoriteMenuIdList = JSON.parse(localStorage.getItem(this.favKey));
-
-      if(!this.hiddenMenuIdList) {
-        this.hiddenMenuIdList = [];
-      }
-
-      if(!this.favoriteMenuIdList){
-          this.favoriteMenuIdList = [];
-      }
-
-      // Creates filter for search bar (top right)
-      this.generalFilter$.subscribe( filter => {
-        if(this.currentMensa) {
-          this.filter(this.currentMensa, false, (menu: Menu) =>
-        {
-            return !filter || filter =="" || ("" + menu.name + menu.description + menu.prices + menu.allergene).toLowerCase().includes((filter + "").toLowerCase());
-        });
-        }
-      })
-  }
 
 
   /**
@@ -351,15 +349,14 @@ export class MensaService {
           }
         }
     }
+  }
 
-/*    Object.values(mensa.weekdays).forEach((day : Weekday, index : number) => {
-      let favoriteMensaDay = this.favoriteMensa.weekdays[day.number];
 
-      for(let mealtype of day.mealTypes) {
+  public changeActiveMensa(mensa : Mensa) {
+    this.currentMensa = mensa;
+    console.log("change active mensa")
+    this.selectedMensaName.next(this.currentMensa.name);
 
-      }
-    });*/
-    console.log(this.favoriteMensa);
   }
 
   /**
@@ -367,12 +364,11 @@ export class MensaService {
   */
   getMensaForId(id: number) {
 
-      this.currentMensa =  this.mensaList[this.idToNameMapping[id]];
+      this.selectedMensaShowName = false;
+      this.changeActiveMensa(this.mensaList[this.idToNameMapping[id]])
 
       this.filter(this.currentMensa, true, this.getDefaultMenuFilter());
 
-      this.selectedMensaShowName = false;
-      this.selectedMensaName.next(this.currentMensa.name);
 
       return this.currentMensa;
   }
@@ -438,7 +434,7 @@ export class MensaService {
 
   class DummyMenu implements Menu {
     mensa: String = "Dummy";
-    name: String = "Dummy";;
+    name: String = "Dummy";
     id: String = "Dummy";
     prices: Record<string,String> = {student: "8.50", staff:"9.50", extern: "10.50"};
     description: String = "Chili Bacon Cheeseburger \nSesam Bun, Beefburger \noder Vegi-Burger, Lattich, \nCheddar, Zwiebeln, Jalapenos,\nSpeck und Chilisauce\nPommes frites";
@@ -459,12 +455,14 @@ export class MensaService {
      category: String;
      isClosed: boolean;
      weekdays: Record<string, Weekday>;
+     navigationId: number;
 
      constructor(dateArray: Array<string>) {
        this.name = "Favorites";
        this.isClosed = false;
        this.weekdays = {};
        this.category = "None";
+       this.navigationId = -1;
        ["Mo", "Di", "Mi", "Do", "Fr"].forEach ( (label:string, pos: number) => {
          this.weekdays[dateArray[pos]] = new DummyWeekday(label, pos);
        });
@@ -481,7 +479,6 @@ export class MensaService {
       this.label = label;
       this.menus = [];
     }
-
 
   }
 

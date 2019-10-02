@@ -4,5 +4,8 @@
     <app-weekday
     [day] = "day"></app-weekday>
   </mat-tab>
+  <div *ngIf="getWeekdaysArr(mensa).length == 0">
+    keine menüs vorhanden
+    </div>
 
 </mat-tab-group>

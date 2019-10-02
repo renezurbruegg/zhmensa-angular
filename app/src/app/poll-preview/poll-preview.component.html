@@ -1,0 +1,65 @@
+<mat-card class="menu-card">
+
+  <mat-card-header style="width:100%">
+
+     <div fxFlex></div> <div  class="vegi"><div class="vegi-badge">{{poll.votecount}} votes</div></div>
+    <mat-card-title>{{poll.title}}</mat-card-title>
+
+    <mat-card-subtitle></mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+
+    <div *ngFor = "let entry of previewList">
+      <div fxLayout="column">
+        <div style="text-overflow: ellipsis;">
+          {{entry.title}} ({{entry.votes}}/{{poll.votecount}})
+          </div>
+         <div fxFlex style="margin-right:20px; margin-left: 20px; padding-top:10px; margin-bottom:20px; max-width: 500px">
+           <mat-progress-bar
+            class="example-margin"
+            color="primary"
+            mode="determinate"
+            [value]="entry.pbValue"
+            [bufferValue]="0">
+            </mat-progress-bar>
+           </div>
+           </div>
+      </div>
+
+  <!--  <p>
+      <ng-container *ngFor="let line of menu.description;">
+        {{line}}
+        <br>
+      </ng-container>
+    </p>
+          <p *ngIf = "menu.isExpanded">Allergene:  {{menu.allergene}}</p>
+
+-->
+
+  </mat-card-content>
+
+  <mat-card-actions><!--
+    <div fxLayout="row">
+       <div fxFlex style="margin-right:20px; padding-top:20px">
+         <mat-progress-bar
+           class="example-margin"
+           color="primary"
+           mode="determinate"
+           [value]="getPbValue()"
+           [bufferValue]="0">
+           </mat-progress-bar>
+         </div>
+<div *ngIf = "!pollOption.userVoted">
+       <button  (click)="toggleVote()" mat-icon-button style="float:right"><mat-icon fontSet="material-icons-outlined">thumb_up</mat-icon></button>
+</div>
+<div *ngIf = "pollOption.userVoted">
+     <button  (click)="toggleVote()" mat-icon-button style="float:right"><mat-icon fontSet="material-icons">thumb_up</mat-icon></button>
+  </div>
+</div>
+
+-->
+<button  (click)="hidePoll()" mat-stroked-button >  <mat-icon fontSet="material-icons">visibility_off</mat-icon> Ausblenden</button>
+<button  (click)="navToPoll()" mat-stroked-button > Zur Umfrage <mat-icon fontSet="material-icons">send</mat-icon></button>
+  </mat-card-actions>
+</mat-card>

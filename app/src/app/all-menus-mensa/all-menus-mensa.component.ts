@@ -41,6 +41,7 @@ export class AllMenusMensaComponent implements OnInit {
         this.filterStoredMensa( () => true);
       })
 
+      this.mensaService.changeActiveMensa(this.mensa);
   }
 
 

@@ -2,6 +2,9 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Menu } from '../models/menu';
 import { MensaService } from '../_service/mensa-service';
 
+/**
+  Displays a Menu as a Card
+*/
 @Component({
   selector: 'app-menu-card-component',
   templateUrl: './menu-card-component.component.html',
@@ -13,28 +16,14 @@ export class MenuCardComponentComponent implements OnInit {
   public menu: Menu;
   public hasAllergene: boolean;
 
-  constructor(private mensaService: MensaService) {
+  constructor(private mensaService: MensaService) {}
 
- }
 
-  getDescription(menu: Menu) {
-    if(typeof menu.description == "string") {
-      return  menu.description ;
-    }
-    let ret = "";
-    for (let l of menu.description) {
-      ret += l + "\n";
-    }
-    return ret;
-  }
    getPrices() {
-     let ret : string = "";
-     ["student", "staff", "extern"].forEach( (value:string) => {
-       ret+= ret == "" ? "" : " / "
-       ret += this.menu.prices[value];
-     } )
-     return ret;
+     return Object.values(this.menu.prices).join(" / ");
    }
+
+
    getMenuName() : String {
     if(this.mensaService.selectedMensaShowName) {
       return this.menu.mensa + ": " + this.menu.name;

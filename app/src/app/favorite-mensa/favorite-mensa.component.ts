@@ -56,7 +56,9 @@ export class FavoriteMensaComponent implements OnInit {
           }
             this.isSmallScreen = state.matches;
         });
-        this.mensaService.selectedMensaName.next("Favoriten")
+        this.mensaService.changeActiveMensa(this.mensa);
+
+
   }
 
   isSmallScreen: boolean = false;

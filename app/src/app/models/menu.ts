@@ -10,6 +10,6 @@ export interface Menu {
   isVegi: boolean;
   nutritionFacts?: String;
   isFavorite? : boolean;
-    isHidden?: boolean;
-    isExpanded? : boolean;
+  isHidden?: boolean;
+  isExpanded? : boolean;
 }

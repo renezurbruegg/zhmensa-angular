@@ -7,14 +7,22 @@ import { BehaviorSubject, Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class PollService {
-  path: string = "http://mensazh.vsos.ethz.ch:8080/api/polls/"; //?start=2019-09-23&end=2019-09-25";
+  path: string = "http://mensazh.vsos.ethz.ch:8080/api/polls"; //?start=2019-09-23&end=2019-09-25";
   votedPollIdList: Array<String>;
   votedPollIdKey: string = "voted_poll_ids";
+
+  knownPollKey:string = "known_poll_ids";
+
+  knownPollIds: Array<String>;
+
+  knownPollObj: Array<Poll>;
 
 
   public voteUpdateSubject: Subject<Poll> = new BehaviorSubject(null);
   voteUpdateSubject$ = this.voteUpdateSubject.asObservable();
 
+    public onPollIdRemoved: Subject<String> = new BehaviorSubject("");
+    onPollIdRemoved$ = this.onPollIdRemoved.asObservable();
 
   constructor(private http: HttpClient) {
     this.votedPollIdList = JSON.parse(localStorage.getItem(this.votedPollIdKey));
@@ -22,8 +30,62 @@ export class PollService {
     if(!this.votedPollIdList) {
       this.votedPollIdList = [];
     }
+
+    this.knownPollIds = JSON.parse(localStorage.getItem(this.knownPollKey));
+
+    if(!this.knownPollIds) {
+      this.knownPollIds = [];
+    }
   }
 
+
+  public getKnownPollIds() {
+    //return ["5d8d1cd0c15862c781a6be27","5d8a2a51d6c3c05682274c76","5d8d1cd0c15862c781a6be27"];
+    return this.knownPollIds;
+  }
+
+  public getKnownPollObj() : Promise<Array<Poll>> {
+
+    return new Promise<Array<Poll>>((resolve, reject) => {
+      // load host.json file
+      this.http.post(this.path, {ids: this.getKnownPollIds()}).toPromise().then(
+        (response: any) => {
+          this.knownPollObj = response["polls"];
+          resolve(this.knownPollObj);
+        }
+      ).catch((response: any) => {
+        reject("Could not load mensa list " + response);
+      });
+    });
+  }
+
+  public addKnownPollId(pollId: String) {
+    console.log("add known Poll id: " + pollId)
+    console.log(this.knownPollIds)
+    if(!this.knownPollIds.includes(pollId))
+      this.knownPollIds.push(pollId)
+
+    console.log(this.knownPollIds)
+    localStorage.setItem(this.knownPollKey, JSON.stringify(this.knownPollIds));
+  }
+
+
+  removePollId(pollId: string){
+      for( var i = 0; i < this.knownPollIds.length; i++){
+        if (this.knownPollIds[i] === pollId) {
+         this.knownPollIds.splice(i, 1);
+       }
+    }
+    for( var i = 0; i < this.knownPollObj.length; i++){
+      if (this.knownPollObj[i].id === pollId) {
+       this.knownPollObj.splice(i, 1);
+     }
+  }
+    this.onPollIdRemoved.next(pollId);
+    console.log("removed")
+    localStorage.setItem(this.knownPollKey, JSON.stringify(this.knownPollIds));
+
+  }
   hasUserVotedOnPoll(pollId: string) : boolean {
     return this.votedPollIdList.includes(pollId);
   }
@@ -75,9 +137,9 @@ export class PollService {
     console.log(JSON.stringify(payload));
 
     return new Promise<Poll>((resolve, reject) => {
-      console.log("calling path" + this.path +"vote/"+ poll.id)
+      console.log("calling path" + this.path +"/vote/"+ poll.id)
       // load host.json file
-      this.http.post(this.path + "vote/" + poll.id, payload).toPromise().then(
+      this.http.post(this.path + "/vote/" + poll.id, payload).toPromise().then(
         (response: any) => {
           console.log("response");
           console.log(response);
@@ -91,9 +153,9 @@ export class PollService {
 
   getPollForId(id : string) {
     return new Promise<Poll>((resolve, reject) => {
-      console.log("calling path" + this.path + id)
+      console.log("calling path" + this.path + "/" + id)
       // load host.json file
-      this.http.get(this.path + id).toPromise().then(
+      this.http.get(this.path + "/" + id).toPromise().then(
         (response: Poll) => {
           console.log("response");
           console.log(response);
