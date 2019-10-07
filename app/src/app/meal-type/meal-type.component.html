@@ -3,7 +3,7 @@
 
     <div fxLayout="row wrap" fxLayoutAlign="space-evenly">
       <ng-container *ngFor="let menu of meal.menus">
-        <div  *ngIf = "!menu.isHidden" class="menu-card">
+        <div  *ngIf = "!menu.isHidden" class="menu-card mat-card meal-type-card" >
           <app-menu-card-component [menu]="menu">
           </app-menu-card-component>
         </div>

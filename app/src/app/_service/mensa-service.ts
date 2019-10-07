@@ -21,7 +21,7 @@ Main Service. Provides access to all Mensa instances.
 */
 export class MensaService {
 
-    public WEEKDAYS_LONG = ["Montag", "Dientag", "Mittwoch", "Donnerstag", "Freitag"]
+    public WEEKDAYS_LONG = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
     public WEEKDAYS_SHORT =["Mo", "Di","Mi", "Do", "Fr"]
     /**
     Flag that is set if the mensa that is currently selected has menüs that needs to show the Mensa name
