@@ -167,6 +167,7 @@ export class MensaService {
       })
     }
 
+
     /**
     Returns the Menu item that belongs to a given pollOption and Poll.
     If no matching menu is found, the function will return a dummy implementation

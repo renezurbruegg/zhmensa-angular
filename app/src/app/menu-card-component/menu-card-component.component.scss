@@ -2,11 +2,11 @@
 @import "./../../_variable.scss";
 
 .menu-card{
-  width: 300px;
   margin:7px;
 }
 .fake-card {
     box-shadow: none !important;
+    width: 280px;
 }
 .vegi-badge {
   border: 1px solid  darken( $primary, 10% );

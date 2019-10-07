@@ -8,7 +8,7 @@ import { MealType } from '../models/mealtype';
   styleUrls: ['./meal-type.component.scss']
 })
 export class MealTypeComponent implements OnInit {
-  
+
     minWidth: number = 400;
     menu: Menu;
     breakpoint: number;
@@ -29,6 +29,6 @@ export class MealTypeComponent implements OnInit {
     }*/
 
     getColNumbs(width: number) : number {
-      return Math.max(Math.min(6, width / 400), 1);
+      return Math.max(Math.min(6, width / 200), 1);
     }
 }

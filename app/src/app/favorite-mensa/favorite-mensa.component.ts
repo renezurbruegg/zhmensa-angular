@@ -16,7 +16,6 @@ import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/l
 export class FavoriteMensaComponent implements OnInit {
   defaultFilter: (menu: Menu) => boolean;
 
-
   ngOnInit(): void {
 
     this.mensa = this.mensaService.getMensaContainingAllMenus();
@@ -44,6 +43,16 @@ export class FavoriteMensaComponent implements OnInit {
       this.mensaService.onMenuFavChanged$.subscribe( (id) => {
             this.filterStoredMensa(() => true);
       })
+
+      console.log("fav list")
+      console.log(this.mensaService.favoriteMenuIdList)
+      if(this.mensaService.favoriteMenuIdList.length == 0) {
+        let drawer = document.getElementById("toggleButton");
+        console.log("drawer item")
+        console.log(drawer)
+        if(drawer)
+          drawer.click();
+      }
 
       this.breakpointObserver
         .observe([Breakpoints.Small, Breakpoints.HandsetPortrait])
