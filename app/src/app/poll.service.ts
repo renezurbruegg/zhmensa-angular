@@ -39,6 +39,36 @@ export class PollService {
   }
 
 
+
+  private hasUserVotedOnPollOption(option: PollOption, pollId: string) {
+    let pollMenus = JSON.parse(localStorage.getItem(pollId));
+
+    return (pollMenus && pollMenus.includes(option.menuId))
+
+  }
+
+  private toggleUserVotedOnPollOption(option: PollOption, pollId: string) {
+    let pollMenus = JSON.parse(localStorage.getItem(pollId));
+
+    if(!pollMenus) {
+      pollMenus = [];
+    }
+
+    if(pollMenus.includes(option.menuId)) {
+      // remove id
+      for( var i = 0; i < pollMenus.length; i++){
+        if (pollMenus[i] === option.menuId) {
+         pollMenus.splice(i, 1);
+       }
+     }
+     } else {
+       pollMenus.push(option.menuId);
+     }
+
+     localStorage.setItem(pollId, JSON.stringify(pollMenus));
+   }
+
+
   public getKnownPollIds() {
     //return ["5d8d1cd0c15862c781a6be27","5d8a2a51d6c3c05682274c76","5d8d1cd0c15862c781a6be27"];
     return this.knownPollIds;
@@ -51,6 +81,7 @@ export class PollService {
       this.http.post(this.path, {ids: this.getKnownPollIds()}).toPromise().then(
         (response: any) => {
           this.knownPollObj = response["polls"];
+
           resolve(this.knownPollObj);
         }
       ).catch((response: any) => {
@@ -102,7 +133,7 @@ export class PollService {
 
     this.performVoteCall(poll, pollOption, update).then( (response:any) => {
       this.addPollId(poll.id);
-
+      this.toggleUserVotedOnPollOption(pollOption, poll.id);
       if(!update && ! pollOption.userVoted) {
         poll.votecount += 1;
       }
@@ -159,6 +190,9 @@ export class PollService {
         (response: Poll) => {
           console.log("response");
           console.log(response);
+            for(let option of response.options){
+              option.userVoted = this.hasUserVotedOnPollOption(option, response.id);
+          }
           resolve(response);
         }
       ).catch((response: any) => {
