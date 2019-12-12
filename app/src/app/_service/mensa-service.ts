@@ -121,7 +121,8 @@ export class MensaService {
       let date:Date = new Date();
 
       this.lang = localStorage.getItem("pref-language");
-
+      this.lang = this.lang || "de"
+      
       let day = date.getDay();
 
       if(day == 0) {
