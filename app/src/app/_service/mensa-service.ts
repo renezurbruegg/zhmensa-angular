@@ -29,6 +29,8 @@ export class MensaService {
     */
     public selectedMensaShowName: boolean = false;
 
+
+    public lang = "de";
     /**
     Mensa that is currently selected.
     */
@@ -37,7 +39,9 @@ export class MensaService {
     /**
     API Path to get mensa items from backend
     */
-    path: string = "http://mensazh.vsos.ethz.ch:8080/api/getMensaForTimespan"; //?start=2019-09-23&end=2019-09-25";
+    path: string = "http://mensazh.vsos.ethz.ch:8080/api/"
+
+    resource:string = "/all/getMensaForCurrentWeek"; //?start=2019-09-23&end=2019-09-25";
 
     /**
     Key to obtain favorites stored in browser
@@ -116,6 +120,8 @@ export class MensaService {
     constructor(private http: HttpClient) {
       let date:Date = new Date();
 
+      this.lang = localStorage.getItem("pref-language");
+
       let day = date.getDay();
 
       if(day == 0) {
@@ -138,7 +144,7 @@ export class MensaService {
       this.dateArray.push(this.endDate)
       // Date array contains all dates for which menus will be loaded
 
-      this.path = this.path + "?start="+this.startDate + "&end="+this.endDate;
+        this.resource = this.resource + "?start="+this.startDate + "&end="+this.endDate;
       // add start and end timestamps to path
 
       this.favoriteMensa = new FavoriteMensa(this.dateArray);
@@ -289,8 +295,8 @@ export class MensaService {
       */
       public load() {
         return new Promise<void>((resolve, reject) => {
-
-          this.http.get(this.path).toPromise().then(
+          let link = this.path+this.lang+this.resource;
+          this.http.get(link).toPromise().then(
             (response: Record<string,Mensa>) => {
               this.mensaList = response;
               this.idToNameMapping = this.getMensaNamesOrdered(this.mensaList);
@@ -411,6 +417,10 @@ export class MensaService {
   }
 
 
+  updateLang(lang: string) {
+     localStorage.setItem("pref-language", lang);
+     this.lang = lang;
+  }
 }
 
 /*

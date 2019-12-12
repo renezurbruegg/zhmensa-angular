@@ -25,15 +25,26 @@
       <span>{{title}}</span>
 	      <span fxFlex="auto"></span>
 
-				<div *ngIf="!(isHandset$ | async)" class="example-container">
+        <div>
+				<div *ngIf="!(isHandset$ | async)" class="example-container" style="float:left; margin-right:10px">
 	  <form class="example-container" [formGroup]="searchForm">
 		<mat-form-field class="search-field">
     <input matInput type="search" placeholder="search here" class="search-input" formControlName="searchCtrl">
     <mat-icon matPrefix>search</mat-icon>
+  </mat-form-field>
+    </form>
+          </div>
+        <div style="float:right">
+    <form>
+  <mat-form-field style = "font-size: 14px; width:100px;">
+  <mat-select  [(value)]="lang" (selectionChange)="onLangChanged()" class ="small"  >
+    <mat-option value="de">Deutsch</mat-option>
+    <mat-option value="en">English</mat-option>
+  </mat-select>
 </mat-form-field>
-
 </form>
 </div>
+        </div>
     </mat-toolbar>
 
 		<div class="content gesture__zone"style="width:100%"  (swipe)="onSwipe($event)">

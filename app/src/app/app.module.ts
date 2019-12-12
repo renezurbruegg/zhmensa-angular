@@ -32,6 +32,7 @@ import * as Hammer from 'hammerjs';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { PollOverviewComponent } from './poll-overview/poll-overview.component';
 import { PollPreviewComponent } from './poll-preview/poll-preview.component';
+import {MatSelectModule} from "@angular/material/select";
 // import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
 
@@ -81,7 +82,7 @@ export function initializeApp(mensaService: MensaService) {
     BrowserModule,MatCardModule, HttpClientModule,
     FlexLayoutModule,
     MatFormFieldModule,
-    MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule,MatGridListModule,MatTabsModule,
+    MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule,MatGridListModule,MatTabsModule, MatSelectModule,
     AppRoutingModule,GridModule , BrowserAnimationsModule,ReactiveFormsModule, FormsModule,MatProgressBarModule,
   NgMatSearchBarModule],
   providers: [MensaService, MensaRouteService,

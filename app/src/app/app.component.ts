@@ -33,6 +33,7 @@ export class AppComponent {
   });
 
 
+  lang: string = "de";
 
   public title: string = "Title";
 
@@ -145,6 +146,9 @@ export class AppComponent {
       console.log("update " + data)
     });
 
+
+     this.lang = this.mensaService.lang || navigator.language;
+
     let mensaMap: Record<string, Mensa> = mensaService.getMensaMap();
     console.log(mensaMap);
     console.log(mensaService.getMensaNames());
@@ -167,5 +171,11 @@ export class AppComponent {
         mensaService.generalFilter.next(val);
       }
     )
+  }
+
+  onLangChanged() {
+      this.mensaService.updateLang(this.lang);
+
+    window.location.reload();
   }
 }
