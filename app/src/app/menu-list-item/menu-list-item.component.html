@@ -4,6 +4,7 @@
   <mat-icon *ngIf = "item.matIcon" class="routeIcon">{{item.iconName}}</mat-icon>
   <img *ngIf = "item.pngIcon" class="cat-icon" [src]="item.iconName">
   {{item.displayName}}
+  <div class = "badge" *ngIf="item.closed">closed</div>
   <span fxFlex *ngIf="item.children && item.children.length">
     <span fxFlex></span>
     <mat-icon style="margin-top:8px"  [@indicatorRotate]="expanded ? 'expanded': 'collapsed'">

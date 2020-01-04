@@ -87,7 +87,7 @@ export class AppComponent {
         route: '',
         loginRequired: false,
         children: []
-      }
+      };
       this.navItems.push(parentItem);
     }
 
@@ -96,6 +96,7 @@ export class AppComponent {
       iconName: 'food',
       route: '/mensa/' + mensa.navigationId,
       loginRequired: false,
+      closed:mensa.isClosed,
     };
     parentItem.children.push(it)
   }

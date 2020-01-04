@@ -39,7 +39,7 @@ export class MensaService {
     /**
     API Path to get mensa items from backend
     */
-    path: string = "http://mensazh.vsos.ethz.ch:8080/api/"
+    path: string = "https://api.mensazurich.ch/api/";
 
     resource:string = "/all/getMensaForCurrentWeek"; //?start=2019-09-23&end=2019-09-25";
 
@@ -122,7 +122,7 @@ export class MensaService {
 
       this.lang = localStorage.getItem("pref-language");
       this.lang = this.lang || "de"
-      
+
       let day = date.getDay();
 
       if(day == 0) {

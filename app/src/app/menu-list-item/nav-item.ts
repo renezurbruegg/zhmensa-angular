@@ -7,4 +7,5 @@ export interface NavItem {
   route?: string;
   children?: NavItem[];
   loginRequired:boolean;
+  closed?:boolean;
 }
